@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.meritamerica.assignment5.view.*;
 import com.meritamerica.exceptions.*;
 
-import javassist.NotFoundException;
 
 @RestController
 public class MeritBankController {

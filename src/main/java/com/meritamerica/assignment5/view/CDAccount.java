@@ -6,7 +6,6 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
-// CDAccount(child class) inherit methods and variables from BankAccount(parent class)
 public class CDAccount extends BankAccount {
 	private CDOffering offering;
 	@NotNull
@@ -34,7 +33,6 @@ public class CDAccount extends BankAccount {
 	public static CDAccount readFromString(String accountData) throws ParseException {
 		String[] data = accountData.split(",");
 
-		// Create a date formatter
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
 		int accNumb = Integer.parseInt(data[0]);
@@ -77,7 +75,6 @@ public class CDAccount extends BankAccount {
 		return str.toString();
 	}
 
-	// CDA account can not do withdraw or deposit within the term period
 	@Override
 	public boolean withdraw(double amount) {
 		return false;

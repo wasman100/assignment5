@@ -6,12 +6,11 @@ import java.util.Date;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-// Declare a class that implements an interface 
+
 public class AccountHolder implements Comparable {
 	private static long ID = 1;
 
 	private long id;
-	// Class member variables
 	@NotNull(message = "First name can not be Null")
 	@org.hibernate.validator.constraints.NotBlank(message = "First name must not be empty")
 	private String firstName;
@@ -26,12 +25,10 @@ public class AccountHolder implements Comparable {
 	private SavingsAccount[] savingsAccounts;
 	private CDAccount[] CDAccounts;
 
-	// keep track of numbers of checkings and saving accounts
 	private int numberOfCheckings = 0;
 	private int numberOfSavings = 0;
 	private int numberOfCDAs = 0;
 
-	// Used split method to split a string into an array
 	public static AccountHolder readFromString(String accountHolderData) {
 		String[] data = accountHolderData.split(",");
 		String firstName = data[0];
@@ -45,7 +42,6 @@ public class AccountHolder implements Comparable {
 	public AccountHolder() {
 		this.id = AccountHolder.ID;
 		AccountHolder.ID++;
-		// instantiate array of Checkings
 		checkingAccounts = new CheckingAccount[10];
 		savingsAccounts = new SavingsAccount[10];
 		CDAccounts = new CDAccount[10];
@@ -78,14 +74,9 @@ public class AccountHolder implements Comparable {
 		return this.addCheckingAccount(acc);
 	}
 
-	/*
-	 * If combined balance limit is exceeded, throw
-	 * ExceedsCombinedBalanceLimitException also add a deposit transaction with the
-	 * opening balance
-	 */
+
 	public CheckingAccount addCheckingAccount(CheckingAccount checkingAccount)
 			throws ExceedsCombinedBalanceLimitException {
-		// check the opening account condition
 		if (canOpen(checkingAccount.getBalance())) {
 			double amount = checkingAccount.getBalance();
 
@@ -93,10 +84,10 @@ public class AccountHolder implements Comparable {
 
 			checkingAccount.addTransaction(tran);
 
-			// increment numberOfCheckings currently have
+
 			this.numberOfCheckings++;
 
-			// if numberOfChecking bigger than the account array
+
 			if (this.numberOfCheckings > this.checkingAccounts.length) {
 				this.checkingAccounts = this.extendCheckingArray();
 			}
@@ -127,35 +118,24 @@ public class AccountHolder implements Comparable {
 		return total;
 	}
 
-	/*
-	 * If combined balance limit is exceeded, throw
-	 * ExceedsCombinedBalanceLimitException also add a deposit transaction with the
-	 * opening balance
-	 */
+
 	public SavingsAccount addSavingsAccount(double openingBalance) throws ExceedsCombinedBalanceLimitException {
 		SavingsAccount sav = new SavingsAccount(openingBalance);
 		return this.addSavingsAccount(sav);
 	}
 
-	/*
-	 * If combined balance limit is exceeded, throw
-	 * ExceedsCombinedBalanceLimitException also add a deposit transaction with the
-	 * opening balance
-	 */
+
 	public SavingsAccount addSavingsAccount(SavingsAccount savingsAccount) throws ExceedsCombinedBalanceLimitException {
-		// check if total amount is greater than 250, 000
 		if (canOpen(savingsAccount.getBalance())) {
-			// add this transaction inside that account
 			double amount = savingsAccount.getBalance();
 
 			DepositTransaction tran = new DepositTransaction(savingsAccount, savingsAccount.getBalance(), new Date());
 
 			savingsAccount.addTransaction(tran);
 
-			// increment total of saving accounts
+
 			this.numberOfSavings++;
 
-			// if numberOfSaving bigger than saving array length
 			if (this.numberOfSavings > this.savingsAccounts.length) {
 				this.savingsAccounts = this.extendSavingArray();
 			}
@@ -186,7 +166,6 @@ public class AccountHolder implements Comparable {
 		return total;
 	}
 
-	// Should also add a deposit transaction with the opening balance
 	public CDAccount addCDAccount(CDOffering offering, double openingBalance)
 			throws ExceedsFraudSuspicionLimitException {
 		CDAccount acc = new CDAccount(offering, openingBalance);
@@ -195,16 +174,13 @@ public class AccountHolder implements Comparable {
 
 	}
 
-	// Should also add a deposit transaction with the opening balance
 	public CDAccount addCDAccount(CDAccount cdAccount) throws ExceedsFraudSuspicionLimitException {
 		this.numberOfCDAs++;
 
-		// check CDAccount array capacity
 		if (this.numberOfCDAs > this.CDAccounts.length) {
 			this.CDAccounts = this.extendCDArray();
 		}
 
-		// check fraud
 		DepositTransaction tran = new DepositTransaction(cdAccount, cdAccount.getBalance(), new Date());
 
 		cdAccount.addTransaction(tran);
@@ -236,8 +212,7 @@ public class AccountHolder implements Comparable {
 		return this.getCDBalance() + this.getCheckingBalance() + this.getSavingsBalance();
 	}
 
-	// This method validates that the total amount of combined balance and deposit
-	// is less than $250,000.00
+
 	private boolean canOpen(double deposit) throws ExceedsCombinedBalanceLimitException {
 		if (this.getCombinedBalance() < 250000.00) {
 			return true;
@@ -258,8 +233,7 @@ public class AccountHolder implements Comparable {
 			return 0;
 	}
 
-	// find the account has that ID in this account holder and return that account,
-	// if can not find, return null
+
 	public BankAccount findAccount(long ID) {
 		for (int i = 0; i < this.numberOfCheckings; i++) {
 			if (this.checkingAccounts[i].getAccountNumber() == ID) {
@@ -282,7 +256,6 @@ public class AccountHolder implements Comparable {
 		return null;
 	}
 
-	// extend account array capacity of
 	public CheckingAccount[] extendCheckingArray() {
 		CheckingAccount[] checkings = new CheckingAccount[this.checkingAccounts.length * 2];
 		for (int i = 0; i < this.checkingAccounts.length; i++) {
@@ -292,7 +265,6 @@ public class AccountHolder implements Comparable {
 		return checkings;
 	}
 
-	// extend account array capacity
 	public SavingsAccount[] extendSavingArray() {
 		SavingsAccount[] savings = new SavingsAccount[this.savingsAccounts.length * 2];
 
@@ -303,7 +275,6 @@ public class AccountHolder implements Comparable {
 		return savings;
 	}
 
-	// extend account array capacity
 	public CDAccount[] extendCDArray() {
 		CDAccount[] cds = new CDAccount[this.CDAccounts.length * 2];
 

@@ -1,6 +1,6 @@
 package com.meritamerica.assignment5.view;
 
-// Using DecimalFormat Class, one can format a value into specific pattern using its format() method
+
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(value = { "transactions" })
 public class BankAccount {
 
-	// member variables of BankAccount class
+
 	protected long accountNumber;
 	private double balance;
 	@NotNull
@@ -23,7 +23,6 @@ public class BankAccount {
 	private Date openDate;
 	private List<Transaction> transactions;
 
-	// independent constructor
 	public BankAccount() {
 		this.transactions = new ArrayList<>();
 		this.openDate = new Date();
@@ -39,8 +38,7 @@ public class BankAccount {
 	}
 
 	BankAccount(long accountNumber, double balance, double interestRate, Date accountOpenedOn) {
-		// assume that we don't have to check if the account number that is passed in
-		// the parameter is valid (unique)
+
 		this.accountNumber = accountNumber;
 		this.balance = balance;
 		this.interestRate = interestRate;
@@ -49,16 +47,16 @@ public class BankAccount {
 		transactions = new ArrayList<>();
 	}
 
-	// don't know the purpose of using BankAccount static readFromString
+
 	public static BankAccount readFromString(String accountData) throws ParseException {
 		String[] data = accountData.split(",");
 
-		// Create a date formatter
+
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 		int accNumb = Integer.parseInt(data[0]);
 		double balance = Double.parseDouble(data[1]);
 		double interestRate = Double.parseDouble(data[2]);
-		Date openDate = formatter.parse(data[3]); // parse the date into date object
+		Date openDate = formatter.parse(data[3]);
 
 		return new BankAccount(accNumb, balance, interestRate, openDate);
 	}

@@ -2,7 +2,7 @@ package com.meritamerica.assignment5.view;
 
 import javax.validation.constraints.NotNull;
 
-// This CDoffering class gets the term and interest rate by two getter methods
+
 public class CDOffering {
 	@NotNull
 
@@ -22,7 +22,7 @@ public class CDOffering {
 		return new CDOffering(term, interestRate);
 	}
 
-	// constructor and parameters
+
 	public CDOffering(int term, double interestRate) {
 		this.term = term;
 		this.interestRate = interestRate;

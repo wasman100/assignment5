@@ -21,8 +21,7 @@ public abstract class Transaction {
 		this.setTransactionDate(date);
 	}
 
-	// this constructor is used when an account is created so there is no source
-	// account
+
 	public Transaction(BankAccount targetAccount, double amount, Date date) {
 		this(null, targetAccount, amount, date);
 	}
@@ -74,22 +73,22 @@ public abstract class Transaction {
 		return data;
 	};
 
-	// -1,2,5000,01/02/2020
+
 	public static Transaction readFromString(String transactionDataString) throws ParseException {
 		String[] data = transactionDataString.split(",");
 		long sourceID = Long.valueOf(data[0]);
 		long targetID = Long.valueOf(data[1]);
 		double amount = Double.valueOf(data[2]);
-		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); // Create a date formatter
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy"); 
 		Date date = formatter.parse(data[3]);
 
 		BankAccount sourceAcc;
 		BankAccount targetAcc = MeritBank.findAccount(targetID);
 		Transaction tran = null;
 
-		// if this is not a transfer transaction
+
 		if (data[0].equals("-1")) {
-			// if found that account
+
 			if (targetAcc != null) {
 				if (amount > 0) {
 					tran = new DepositTransaction(targetAcc, amount, date);

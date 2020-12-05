@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-// SavingsAccount(child class) inherit methods and variables from BankAccount(parent class)
+
 public class SavingsAccount extends BankAccount {
 	private static double INTEREST_RATE = 0.01;
 
@@ -16,7 +16,6 @@ public class SavingsAccount extends BankAccount {
 		super(accNumb, balance, interestRate, openDate);
 	}
 
-	// 0.00001 is the default interest rate.
 	SavingsAccount(double balance) {
 		super(balance, INTEREST_RATE);
 	}
@@ -28,7 +27,7 @@ public class SavingsAccount extends BankAccount {
 	public static SavingsAccount readFromString(String accountData) throws ParseException {
 		String[] data = accountData.split(",");
 
-		// Create a date formatter
+
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
 		int accNumb = Integer.parseInt(data[0]);

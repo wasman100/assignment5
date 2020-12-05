@@ -84,39 +84,28 @@ public class MeritBank {
 			return String.format("%s", d);
 	}
 
-	/*
-	 * Write Merit Bank data to file
-	 */
+
 	public static boolean writeToFile(String fileName) {
 		StringBuilder data = new StringBuilder();
-		// add NextNumber
+
 		data.append(Long.toString(MeritBank.getNextAccountNumber()) + "\n");
-		// add account CDOffering --------------------------------------
-		// add number of CDOfferings
+
 		data.append(Integer.toString(MeritBank.CDOfferings.length) + "\n");
 
-		// add CDOffering
 		for (CDOffering offering : CDOfferings) {
 			data.append(offering.getTerm() + "," + offering.getInterestRate() + "\n");
 		}
 
-		// add account holder -----------------------------------------
-		// add number of account holders
 		data.append(Integer.toString(MeritBank.accountHolders.length) + "\n");
 
 		for (AccountHolder accountHolder : MeritBank.accountHolders) {
-			// add account holder information
 			data.append(accountHolder.getFirstName() + "," + accountHolder.getMiddleName() + ","
 					+ accountHolder.getLastName() + "," + accountHolder.getSSN() + "\n");
-			// add checkings
 			data.append(MeritBank.addCheckingData(accountHolder));
-			// add savings
 			data.append(MeritBank.addSavingData(accountHolder));
-			// add CDAccount
 			data.append(MeritBank.addCDData(accountHolder));
 		}
 
-		// start writing into file
 		try {
 			FileWriter writer = new FileWriter(fileName);
 			writer.write(data.toString());
@@ -136,24 +125,20 @@ public class MeritBank {
 			int numOfCheckings;
 			int numbOfSavings;
 			int numbOfCDAccounts;
-			// Process next account number
 			line = reader.readLine();
 			MeritBank.setNextAccountNumber(Integer.parseInt(line));
 
-			// CD offerings-----------------------------------------------------------------
 			line = reader.readLine();
 			numOfCDOfferings = Integer.parseInt(line);
 
-			// create a array of CDOffering
 			CDOfferings = new CDOffering[numOfCDOfferings];
-			// read all the CDOfferings in and create all of them
+
 			for (int i = 0; i < numOfCDOfferings; i++) {
-				line = reader.readLine().trim(); // trim() is a String method to get rid of white space before and after
-													// a line.
+				line = reader.readLine().trim(); 
 				CDOfferings[i] = CDOffering.readFromString(line);
 			}
 
-			// Account holders--------------------------------------------------------------
+			
 			line = reader.readLine();
 			numOfAccountHolders = Integer.parseInt(line);
 
@@ -162,9 +147,9 @@ public class MeritBank {
 			for (int j = 0; j < numOfAccountHolders; j++) {
 				try {
 					line = reader.readLine();
-					// create account holder
+					
 					AccountHolder acc = AccountHolder.readFromString(line);
-					// process checking account
+					
 					line = reader.readLine();
 					numOfCheckings = Integer.parseInt(line);
 
@@ -172,13 +157,13 @@ public class MeritBank {
 
 					for (int x = 0; x < numOfCheckings; x++) {
 						CheckingAccount checkAcc = CheckingAccount.readFromString(reader.readLine());
-						// process transaction inside the account
+						
 						MeritBank.readTransactions(reader, checkAcc);
 
 						acc.addCheckingAccount(checkAcc);
 
 					}
-					// process saving account
+					
 					line = reader.readLine();
 					numbOfSavings = Integer.parseInt(line);
 
@@ -187,13 +172,12 @@ public class MeritBank {
 					for (int y = 0; y < numbOfSavings; y++) {
 						SavingsAccount savingAcc = SavingsAccount.readFromString(reader.readLine());
 
-						// process transaction inside the account
+						
 						MeritBank.readTransactions(reader, savingAcc);
 
 						acc.addSavingsAccount(savingAcc);
 					}
 
-					// process CD account
 					numbOfCDAccounts = Integer.parseInt(reader.readLine());
 
 					acc.createCDAccounts(numbOfCDAccounts);
@@ -201,13 +185,13 @@ public class MeritBank {
 					for (int z = 0; z < numbOfCDAccounts; z++) {
 						CDAccount CDOAcc = CDAccount.readFromString(reader.readLine());
 
-						// process transaction inside the account
+						
 						MeritBank.readTransactions(reader, CDOAcc);
 
 						acc.addCDAccount(CDOAcc);
 					}
 
-					// add account holder to the array
+					
 					accountHolders[j] = acc;
 
 				} catch (Exception e) {
@@ -217,7 +201,7 @@ public class MeritBank {
 				}
 			}
 
-			// read FraudQueue
+			
 			MeritBank.readFraudQueue(reader);
 
 			reader.close();
@@ -241,7 +225,7 @@ public class MeritBank {
 	private static Transaction readTransactionType(String line) throws ParseException {
 		String[] datas = line.split(",");
 
-		// Create a date formatter
+		
 		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
 		int sourceID = Integer.parseInt(datas[0]);
@@ -250,7 +234,7 @@ public class MeritBank {
 		double amount = Integer.parseInt(datas[2]);
 		Date date = formatter.parse(datas[3]);
 
-		// if this is not a transfer transaction
+
 		if (sourceID != -1) {
 			if (amount >= 0) {
 				return new DepositTransaction(targetAcc, amount, date);
@@ -258,7 +242,7 @@ public class MeritBank {
 				return new WithdrawTransaction(targetAcc, amount, date);
 			}
 		} else {
-			// if this is a transfer transaction
+
 			BankAccount sourceAcc = MeritBank.findAccount(sourceID);
 			return new TransferTransaction(sourceAcc, targetAcc, amount, date);
 		}
@@ -272,7 +256,7 @@ public class MeritBank {
 			String line = reader.readLine();
 			String[] datas = line.split(",");
 
-			// Create a date formatter
+
 			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 
 			int sourceID = Integer.parseInt(datas[0]);
@@ -280,7 +264,7 @@ public class MeritBank {
 			double amount = Double.parseDouble(datas[2]);
 			Date date = formatter.parse(datas[3]);
 
-			// if this is not a transfer transaction
+
 			if (sourceID != -1) {
 				if (amount >= 0) {
 					acc.addTransaction(new DepositTransaction(acc, amount, date));
@@ -288,7 +272,7 @@ public class MeritBank {
 					acc.addTransaction(new WithdrawTransaction(acc, amount, date));
 				}
 			} else {
-				// if this is a transfer transaction
+
 				BankAccount sourceAcc = MeritBank.findAccount(sourceID);
 				acc.addTransaction(new TransferTransaction(sourceAcc, acc, amount, date));
 			}
@@ -305,7 +289,7 @@ public class MeritBank {
 				break;
 			}
 
-			// increase number of checking
+
 			numbOfSavings++;
 
 			data.append(savings[i].writeToString() + "\n");
@@ -314,7 +298,7 @@ public class MeritBank {
 		return numbOfSavings + "\n" + data.toString();
 	}
 
-	// sort account from small to large
+
 	public static AccountHolder[] sortAccountHolders() {
 		AccountHolder[] accountHolder = MeritBank.accountHolders;
 
@@ -322,7 +306,6 @@ public class MeritBank {
 		for (int i = 0; i < n - 1; i++) {
 			for (int j = 0; j < n - i - 1; j++)
 				if (accountHolder[j].compareTo(accountHolder[j + 1]) > 0) {
-					// swap accountHolder[j+1] and accountHolder[i]
 					AccountHolder temp = accountHolder[j];
 					accountHolder[j] = accountHolder[j + 1];
 					accountHolder[j + 1] = temp;
@@ -342,7 +325,7 @@ public class MeritBank {
 				break;
 			}
 
-			// increase num of checking
+
 			numbOfCDs++;
 
 			data.append(cds[i].writeToString() + "\n");
@@ -351,9 +334,7 @@ public class MeritBank {
 		return numbOfCDs + "\n" + data.toString();
 	}
 
-	/*
-	 * convert all the needed checking account information to String and return
-	 */
+
 	private static String addCheckingData(AccountHolder acc) {
 		StringBuilder data = new StringBuilder();
 		int numbOfCheckings = 0;
@@ -364,7 +345,6 @@ public class MeritBank {
 				break;
 			}
 
-			// increase num of checking
 			numbOfCheckings++;
 
 			data.append(checkings[i].writeToString() + "\n");
@@ -385,9 +365,7 @@ public class MeritBank {
 	public static CDOffering getBestCDOffering(double depositAmount) {
 		double highestYield = 0;
 		double tempYield = 0;
-		int bestIndex = 0; // position of the best offerings in the CDOffering array
-
-		// check if the CDOfferings is not null
+		int bestIndex = 0; 
 		if (MeritBank.CDOfferings != null) {
 			for (int i = 0; i < MeritBank.CDOfferings.length; i++) {
 				tempYield = MeritBank.futureValue(depositAmount, CDOfferings[i].getInterestRate(),
@@ -407,7 +385,7 @@ public class MeritBank {
 	public static CDOffering getSecondBestCDOffering(double depositAmount) {
 
 		double highestYield = 0;
-		int secondBestI = 0; // second best offer index
+		int secondBestI = 0; 
 		int bestI = 0;
 		double secondBestYield = 0;
 		double tempYield = 0;
@@ -418,11 +396,9 @@ public class MeritBank {
 						CDOfferings[i].getTerm());
 				if (tempYield > highestYield) {
 
-					// let the second best offer take over the old best offer
 					secondBestI = bestI;
 					secondBestYield = highestYield;
 
-					// the best offer get the new position and value
 					highestYield = tempYield;
 					bestI = i;
 
@@ -456,7 +432,6 @@ public class MeritBank {
 	public static double totalBalances() {
 		double total = 0.0;
 
-		// total all balances (checking and saving) in every account
 		for (int i = 0; i < MeritBank.numbOfAccountHolder; i++) {
 			total += MeritBank.accountHolders[i].getCheckingBalance()
 					+ MeritBank.accountHolders[i].getCheckingBalance();
@@ -480,58 +455,48 @@ public class MeritBank {
 		return futureVal;
 	}
 
-	// add transaction to an account
-	// -- needed to be fixed, use instanceof, calling bankaccount.withdraw,
-	// deposit..etc
+
 	public static boolean processTransaction(Transaction transaction)
 			throws NegativeAmountException, ExceedsFraudSuspicionLimitException, ExceedsAvailableBalanceException {
 		double amount = transaction.getAmount();
 		BankAccount source = transaction.getSourceAccount();
 		BankAccount target = transaction.getTargetAccount();
 
-		// if amount > 1000, add to fraud queue
 		if (Math.abs(transaction.getAmount()) > 1000) {
 			MeritBank.fraudQueue.addTransaction(transaction);
 			throw new ExceedsFraudSuspicionLimitException();
 		}
 
-		// if amount < 0
+
 		if (transaction.getAmount() < 0) {
 			throw new NegativeAmountException();
 		}
 
-		// deposit transaction
 		if (transaction instanceof DepositTransaction) {
 
-			// deposit money into account
+
 			target.deposit(amount);
 
-			// add transaction record
 			target.addTransaction(transaction);
 		} else if (transaction instanceof WithdrawTransaction) {
-			// if withdraw amount larger than balance
 			if (transaction.getAmount() + transaction.getTargetAccount().getBalance() < 0) {
 				throw new ExceedsAvailableBalanceException();
 			}
 
-			// withdraw money
 			target.withdraw(amount);
 
-			// add transaction record
 			transaction.getTargetAccount().addTransaction(transaction);
 		} else if (transaction instanceof TransferTransaction) {
-			// if transfer money more than source account balance
+
 			if (source.getBalance() - amount < 0) {
 				throw new ExceedsAvailableBalanceException();
 			}
 
-			// withdraw money from source account
+
 			source.withdraw(amount);
 
-			// deposit money to target account
 			target.deposit(amount);
 
-			// add transaction record to both accounts
 			transaction.getSourceAccount().addTransaction(transaction);
 			transaction.getTargetAccount().addTransaction(transaction);
 		}
