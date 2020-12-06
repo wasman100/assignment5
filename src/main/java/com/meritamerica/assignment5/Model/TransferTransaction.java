@@ -1,4 +1,4 @@
-package com.meritamerica.assignment5.view;
+package com.meritamerica.assignment5.Model;
 
 import java.util.Date;
 

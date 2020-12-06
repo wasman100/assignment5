@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.meritamerica.assignment5.view.*;
+import com.meritamerica.assignment5.Model.*;
 import com.meritamerica.exceptions.*;
 
 
